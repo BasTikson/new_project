@@ -3,6 +3,7 @@
   <h1> Страница с постами! </h1>
   <my-input
       class="input_search_posts"
+      v-focus
       v-model="searchQuery"
       placeholder="Поиск постов..."
   >
@@ -42,7 +43,7 @@
   />
   <div v-else> Идет загрузка...</div>
 
-  <div ref="observer" class="observer"></div>
+  <div v-intersection="loadMorePosts" class="observer"></div>
 
   <!--    <div class="page__wrapper">-->
   <!--      <div-->
@@ -63,8 +64,7 @@
 <script>
 import PostList from "@/components/PostList.vue";
 import PostForm from "@/components/PostForm.vue";
-import axios from "axios";
-
+import axios from "axios"
 
 export default {
   components: {
@@ -134,18 +134,6 @@ export default {
   },
   mounted() {
     this.fetchPosts()
-    const options = {
-      rootMargin: "0px",
-      threshold: 1.0,
-    };
-    const callback = (entries, observer) => {
-      if (entries[0].isIntersecting && this.page < this.totalPage) {
-        this.loadMorePosts();
-      }
-    };
-    const observer = new IntersectionObserver(callback, options);
-    observer.observe(this.$refs.observer)
-
   },
   computed: {
     sortedPosts() {
